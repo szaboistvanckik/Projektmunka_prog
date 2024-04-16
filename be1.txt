@@ -1,0 +1,11 @@
+Hal neve;Súly (kg);Hossz (cm)
+Harcsa;50;38.5
+Harcsa;50;38.5
+Csuka;20;49.5
+Harcsa;50;38.5
+Harcsa;50;38.5
+Harcsa;50;38.5
+Harcsa;50;38.5
+Nagy harcsa;1000;500
+Harcsa;50;38.5
+Harcsa;50;38.5

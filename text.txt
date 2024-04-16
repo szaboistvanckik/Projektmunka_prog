@@ -24,7 +24,8 @@ Elérhető eszközök:
 
 1.: Megszámolás
 2.: Összegzés
-3.: Minimum
-4.: Maximum
-5.: Eldöntés
-6.: Keresés
+3.: Átlag
+4.: Minimum
+5.: Maximum
+6.: Eldöntés
+7.: Keresés
