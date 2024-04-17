@@ -10,6 +10,7 @@ Lehetséges módok:
 1.: Adat megjelenítő eszközök
 2.: Adat rögzítés manuálisan
 3.: Adat rögzítés más fájl segítségével
+4.: Betűszín megváltoztatása
 ---
 
 Válaszd ki milyen módban szeretnéd elindítani a programot: 
@@ -29,3 +30,31 @@ Elérhető eszközök:
 5.: Maximum
 6.: Eldöntés
 7.: Keresés
+---
+
+Biztosan ezzel a választással szeretnéd folytatni? (y/n): 
+---
+
+Melyik adattal szeretnél dolgozni?
+---
+Ki szeretnél lépni a programból? (y/n): 
+---
+Lehetséges módok:
+
+1. Betűszín megadása manuálisan
+2. Eredeti betűszín visszaállítása
+3. Kérek egy random betűszínt!
+---
+Lehetséges színek:
+
+    0 = ------      8 = Szürke
+    1 = Kék         9 = Halványkék
+    2 = Zöld        A = Halványzöld
+    3 = Vízszín     B = Halvány Vízszín
+    4 = Piros       C = Halványpiros
+    5 = Lila        D = Halványlila
+    6 = Sárga       E = Halványsárga
+    7 = Alap        F = Fényes fehér
+---
+
+Add meg a szín betüjét vagy a számát:  

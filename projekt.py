@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 from os import system, path
 from time import sleep
 
@@ -21,9 +21,9 @@ def combine(x):
         y += e
     return y
 
-def areusure():
+def areusure(text):
     good = ["y", "n"]
-    response = input("Biztosan ezzel a választással szeretnéd folytatni? (y/n): ")
+    response = input(text[6])
     response = valid_choice(response, good)
 
     if response == "y":
@@ -91,11 +91,8 @@ def conditional_round(x, db, header, choice, tool):
 
 def start_choice(text):
     system("cls")
-    print(text[0])
-    sleep(2)
-    system("cls")
     print(text[1])
-    good = ["1", "2", "3"]
+    good = ["1", "2", "3", "4"]
     choice = input(text[2])
     return int(valid_choice(choice, good))
 
@@ -112,10 +109,10 @@ def fchoose(text, choice):
     print(f"A(z) {choice}. módot választottad ki!")
     
     file = fchoose2(text)
-    certain = areusure()
+    certain = areusure(text)
     while not certain:
         file = fchoose2(text)
-        certain = areusure()
+        certain = areusure(text)
 
     sleep(0.5)
     system("cls")
@@ -127,7 +124,7 @@ def whichdata(text, file, x):
     file.seek(0)
     line = file.readline()
     headers = line.split(";")
-    print("\nMelyik adattal szeretnél dolgozni?")
+    print(text[7])
     for i in range(x, len(headers)):
         print(f"{i+1}. {headers[i]}")
         good.append(str(i+1))
@@ -137,7 +134,7 @@ def whichdata(text, file, x):
 
 def wantexit(text, choice, fr):
     good = ["y", "n"]
-    isexit = input("Ki szeretnél lépni a programból? (y/n): ")
+    isexit = input(text[8])
     isexit = valid_choice(isexit, good)
 
     if isexit == "y":
@@ -152,28 +149,37 @@ def modes(text, choice, fr):
     if choice == 1:
         print(text[5])
         choice2 = input(text[2])
-        good = ["1","2","3","4","5","6", "7"]
+        good = ["1","2","3","4","5","6","7"]
+        modes = [mode1, mode2, mode3, mode4, mode5, mode6, mode7]
         tool_choice = int(valid_choice(choice2, good))
-        if tool_choice == 1:
-            mode1(text, choice, fr)
-        elif tool_choice == 2:
-            mode2(text, choice, fr)
-        elif tool_choice == 3:
-            mode3(text, choice, fr)
-        elif tool_choice == 4:
-            mode4(text, choice, fr)
-        elif tool_choice == 5:
-            mode5(text, choice, fr)
-        elif tool_choice == 6:
-            mode6(text, choice, fr)
-        elif tool_choice == 7:
-            mode7(text, choice, fr)
+        modes[tool_choice-1](text, choice, fr)
 
     elif choice == 2:
         print("work in progress")
         
     else:
         print("work in progress")
+
+def randomcolor(text):
+    system("cls")
+    print(text[9])
+    colors = ["a","b","c","d","e","f"]
+    for i in range(10):
+        colors.append(str(i))
+    mode_choice = input(text[2])
+    good = ["1","2","3","q"]
+    mode_choice = valid_choice(mode_choice, good)
+    
+    if mode_choice == "1":
+        print(text[10])
+        color_choice = input(text[11])
+        color_choice = valid_choice(color_choice, colors)
+        print(color_choice)
+        system(f"color {color_choice}")
+    elif mode_choice == "2":
+        system("color 7")
+    else:    
+        system(f"color {choice(colors)}")
 
 def mode1(text, choice, fr):
     db = 0
@@ -292,6 +298,7 @@ def mode7(text, choice, fr):
             print("A hal neve: " + names[i])
     else:
         print("Sikertelen keresés!")
+        print("Legközelebbi érték: ")
 
     
     wantexit(text, choice, fr)
@@ -300,11 +307,19 @@ def main():
     text_list = []
     load_text(text_list)
 
-    pick = start_choice(text_list)    
-    
-    f = open(fchoose(text_list, pick), mode="a+", encoding="UTF-8")
 
-    modes(text_list, pick, f)
+    system("cls")
+    print(text_list[0]) 
+    sleep(2)
+
+    pick = start_choice(text_list)
+
+    while not pick != 4:
+        randomcolor(text_list)
+        pick = start_choice(text_list)
+    else:
+        f = open(fchoose(text_list, pick), mode="a+", encoding="UTF-8")
+        modes(text_list, pick, f)
     
     f.close()
 
