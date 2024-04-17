@@ -1,18 +1,24 @@
 from random import randint
-from os import system
+from os import system, path
 from time import sleep
 
 #//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#
 
+def has(var, list):
+    for e in list:
+        if e == var:
+            return True
+    return False
+
 def valid_choice(var, list):
-    while var not in list:
+    while not has(var, list):
         var = input("Nincs ilyen opció!\nVálassz mást: ")
     return var
 
 def combine(x):
     y = ""
-    for i in range(len(x)):
-        y += x[i]
+    for e in x:
+        y += e
     return y
 
 def areusure():
@@ -93,19 +99,27 @@ def start_choice(text):
     choice = input(text[2])
     return int(valid_choice(choice, good))
 
+def fchoose2(text):
+    file_choice = input(text[4])
+    while not path.exists(file_choice) or file_choice == "text.txt":
+        file_choice = input("Nem létezik ilyen fájl!\nKérlek válassz mást: ")
+    else:
+        print(f'Sikeresen kiválasztottad a "{file_choice}" fájlt!')
+    return file_choice
+        
+
 def fchoose(text, choice):
     print(f"A(z) {choice}. módot választottad ki!")
-    file_choice = input(text[4])
-    print(f'Sikeresen kiválasztottad a "{file_choice}" fájlt!')
-    certain = areusure()
     
+    file = fchoose2(text)
+    certain = areusure()
     while not certain:
-        file_choice = input(text[4])
-        print(f'Sikeresen kiválasztottad a "{file_choice}" fájlt!')
+        file = fchoose2(text)
         certain = areusure()
+
     sleep(0.5)
     system("cls")
-    return file_choice
+    return file
 
 def whichdata(text, file, x):
     good = []
@@ -138,7 +152,7 @@ def modes(text, choice, fr):
     if choice == 1:
         print(text[5])
         choice2 = input(text[2])
-        good = ["1","2","3","4","5","6"]
+        good = ["1","2","3","4","5","6", "7"]
         tool_choice = int(valid_choice(choice2, good))
         if tool_choice == 1:
             mode1(text, choice, fr)
@@ -150,8 +164,10 @@ def modes(text, choice, fr):
             mode4(text, choice, fr)
         elif tool_choice == 5:
             mode5(text, choice, fr)
-        else:
+        elif tool_choice == 6:
             mode6(text, choice, fr)
+        elif tool_choice == 7:
+            mode7(text, choice, fr)
 
     elif choice == 2:
         print("work in progress")
@@ -228,10 +244,57 @@ def mode4(text, choice, fr):
     wantexit(text, choice, fr)
 
 def mode5(text, choice, fr):
-    ...
+    datachoice = whichdata(text, fr, 1)
+    data = []
+    
+    fr.seek(0)
+    header = fr.readline().strip().split(";")
+    line = fr.readline()
+    while line != "":
+        cut = line.split(";")
+        data.append(float(cut[datachoice-1].strip()))
+        line = fr.readline()
+    
+    maxi = 0
+    for i in range(len(data)):
+        if data[i] > data[maxi]:
+           maxi = i
+
+    print(f"A(z) {header[datachoice-1]} legnagyobb eleme: {data[maxi]}")
+    wantexit(text, choice, fr)
 
 def mode6(text, choice, fr):
     ...
+
+def mode7(text, choice, fr):
+    datachoice = whichdata(text, fr, 0)
+    data = []
+    names = []
+
+    fr.seek(0)
+    header = fr.readline().strip().split(";")
+    line = fr.readline()
+    while line != "":
+        cut = line.split(";")
+        data.append(cut[datachoice-1].strip())
+        names.append(cut[0])
+        line = fr.readline()
+    
+    ans = input("Keresés a következőre: ")
+    i = 0
+    n = len(data)
+    while i < n and data[i] != ans:
+        i += 1
+
+    if i < n:
+        print("Sikeres keresés!")
+        if datachoice != 1:
+            print("A hal neve: " + names[i])
+    else:
+        print("Sikertelen keresés!")
+
+    
+    wantexit(text, choice, fr)
 
 def main():
     text_list = []
