@@ -21,7 +21,7 @@ def combine(x):
         y += e
     return y
 
-def areusure(text):
+def areusure(text): # "y" vagy "n" bemenet, ha y akkor visszatér Igazzal ha nem akkor Hamissal
     good = ["y", "n"]
     response = input(text[6])
     response = valid_choice(response, good)
@@ -31,13 +31,13 @@ def areusure(text):
     else:
         return False
 
-def load_text(x):
+def load_text(x): # Betölti a szöveget amit használunk a text.txt állományból
     fr = open("text.txt", "r", encoding="UTF-8")
     line = fr.readline()
     current = []
     while line != "":
         if line == "---\n":
-            x.append(combine(current).rstrip("\n"))
+            x.append(combine(current).rstrip("\n")) # rstrip --> RIGHT strip, leszedi a szöveg jobb oldaláról (végéről) a whitespacet
             current = []
         else:
             current.append(line)
@@ -77,7 +77,7 @@ def conditional_round(x, db, header, choice, tool):
             point = int(input("Kerekítés pontossága (tizedesjegyek száma): "))
 
 
-        if point != 0:
+        if point != 0: # Ez azért kell mert 38.5 int --> 38, de 38.5 int+round --> 39
             print(f"A(z) {header[choice-1]} elemek {text} kerekítve {point} tizedesjegy pontosságra: {round(x/db, point)}")
         else:
             print(f"A(z) {header[choice-1]} elemek {text} kerekítve {point} tizedesjegy pontosságra: {int(round(x/db))}")
@@ -89,16 +89,16 @@ def conditional_round(x, db, header, choice, tool):
 
 #//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#
 
-def start_choice(text):
+def start_choice(text): # Ascii art és mód kiválasztása
     system("cls")
     print(text[1])
     good = ["1", "2", "3", "4"]
     choice = input(text[2])
     return int(valid_choice(choice, good))
 
-def fchoose2(text):
+def fchoose2(text): # Fájl kiválasztása
     file_choice = input(text[4])
-    while not path.exists(file_choice) or file_choice == "text.txt":
+    while not path.exists(file_choice) or file_choice == "text.txt": # path.exists(fájl) --> Ha létezik a fájl akkor True, ha nem akkor False
         file_choice = input("Nem létezik ilyen fájl!\nKérlek válassz mást: ")
     else:
         print(f'Sikeresen kiválasztottad a "{file_choice}" fájlt!')
@@ -108,9 +108,9 @@ def fchoose2(text):
 def fchoose(text, choice):
     print(f"A(z) {choice}. módot választottad ki!")
     
-    file = fchoose2(text)
-    certain = areusure(text)
-    while not certain:
+    file = fchoose2(text) # Fájl kiválasztása
+    certain = areusure(text) # Biztos ezt a fájlt?
+    while not certain: # Amíg nem biztos addig ugyanezt mindig futtassa le
         file = fchoose2(text)
         certain = areusure(text)
 
@@ -149,10 +149,15 @@ def modes(text, choice, fr):
     if choice == 1:
         print(text[5])
         choice2 = input(text[2])
-        good = ["1","2","3","4","5","6","7"]
+        good = ["1","2","3","4","5","6","7", "q"]
         modes = [mode1, mode2, mode3, mode4, mode5, mode6, mode7]
-        tool_choice = int(valid_choice(choice2, good))
-        modes[tool_choice-1](text, choice, fr)
+        tool_choice = valid_choice(choice2, good)
+        
+        if tool_choice == "q":
+            system("cls")
+            procedure(text)
+        else:
+            modes[int(tool_choice)-1](text, choice, fr)
 
     elif choice == 2:
         print("work in progress")
@@ -176,10 +181,15 @@ def randomcolor(text):
         color_choice = valid_choice(color_choice, colors)
         print(color_choice)
         system(f"color {color_choice}")
+        randomcolor(text)
     elif mode_choice == "2":
         system("color 7")
-    else:    
+        randomcolor(text)
+    elif mode_choice == "3":
         system(f"color {choice(colors)}")
+        randomcolor(text)
+    else:    
+        None
 
 def mode1(text, choice, fr):
     db = 0
@@ -229,6 +239,13 @@ def mode3(text, choice, fr):
     conditional_round(x, db, header, datachoice, tool)
     wantexit(text, choice, fr)
 
+def minimum_or_maximum(l, isMax=False, minindex=0):
+    m = minindex
+    for i in range(minindex, len(l)):
+        if (l[i] < l[m] and not isMax) or (l[i] > l[m] and isMax):
+           m = i
+    return m
+
 def mode4(text, choice, fr):
     datachoice = whichdata(text, fr, 1)
     data = []
@@ -238,15 +255,12 @@ def mode4(text, choice, fr):
     line = fr.readline()
     while line != "":
         cut = line.split(";")
-        data.append(cut[datachoice-1])
+        data.append(float(cut[datachoice-1].strip()))
         line = fr.readline()
     
-    mini = 0
-    for i in range(len(data)):
-        if data[i] < data[mini]:
-           mini = i
+    mini = minimum_or_maximum(data)
 
-    print(f"A(z) {header[datachoice-1]} legkisebb eleme: {data[i]}")
+    print(f"A(z) {header[datachoice-1]} legkisebb eleme: {data[mini]}")
     wantexit(text, choice, fr)
 
 def mode5(text, choice, fr):
@@ -261,16 +275,40 @@ def mode5(text, choice, fr):
         data.append(float(cut[datachoice-1].strip()))
         line = fr.readline()
     
-    maxi = 0
-    for i in range(len(data)):
-        if data[i] > data[maxi]:
-           maxi = i
+    maxi = minimum_or_maximum(data, True)
 
     print(f"A(z) {header[datachoice-1]} legnagyobb eleme: {data[maxi]}")
     wantexit(text, choice, fr)
 
+def insertion_sort(l, ascending=False):
+    y = []
+    for e in l:
+        y.append(e)
+
+    for i in range(len(y)):
+        j = minimum_or_maximum(y, ascending, i)
+        if y[i] != y[j]:
+            y[i], y[j] = y[j], y[i]
+    return y
+
 def mode6(text, choice, fr):
-    ...
+    datachoice = whichdata(text, fr, 0)
+    data = []
+    names = []
+
+    fr.seek(0)
+    header = fr.readline().strip().split(";")
+    line = fr.readline()
+    while line != "":
+        cut = line.split(";")
+        if datachoice != 1:
+            data.append(float(cut[datachoice-1].strip()))
+        else:
+            data.append(cut[datachoice-1].strip())
+        names.append(cut[0].strip())
+        line = fr.readline()
+
+    print(*insertion_sort(data, bool(input())))
 
 def mode7(text, choice, fr):
     datachoice = whichdata(text, fr, 0)
@@ -303,24 +341,26 @@ def mode7(text, choice, fr):
     
     wantexit(text, choice, fr)
 
-def main():
-    text_list = []
-    load_text(text_list)
-
-
-    system("cls")
-    print(text_list[0]) 
-    sleep(2)
-
+def procedure(text_list): # Ez azért van itt külön mert a visszalépés gomb ezt hívja meg
     pick = start_choice(text_list)
-
+    
     while not pick != 4:
         randomcolor(text_list)
         pick = start_choice(text_list)
     else:
         f = open(fchoose(text_list, pick), mode="a+", encoding="UTF-8")
         modes(text_list, pick, f)
-    
+
     f.close()
+    
+def main():
+    text_list = []
+    load_text(text_list)
+
+    system("cls")
+    print(text_list[0]) 
+    sleep(2)
+
+    procedure(text_list)
 
 main()

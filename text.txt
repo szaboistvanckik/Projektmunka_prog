@@ -28,8 +28,9 @@ Elérhető eszközök:
 3.: Átlag
 4.: Minimum
 5.: Maximum
-6.: Eldöntés
+6.: Rendezés
 7.: Keresés
+q.: Visszalépés / Más fájl kiválasztása
 ---
 
 Biztosan ezzel a választással szeretnéd folytatni? (y/n): 
@@ -41,9 +42,10 @@ Ki szeretnél lépni a programból? (y/n):
 ---
 Lehetséges módok:
 
-1. Betűszín megadása manuálisan
-2. Eredeti betűszín visszaállítása
-3. Kérek egy random betűszínt!
+1.: Betűszín megadása manuálisan
+2.: Eredeti betűszín visszaállítása
+3.: Kérek egy random betűszínt!
+q.: Visszalépés
 ---
 Lehetséges színek:
 
