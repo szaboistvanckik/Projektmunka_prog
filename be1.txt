@@ -1,11 +1,68 @@
 Hal neve;Súly (kg);Hossz (cm)
 Harcsa;50;38.5
-Harcsa;50;38.5
-Csuka;20;49.5
-Harcsa;50;38.5
-Harcsa;50;-5.5
-Harcsa;200;38.5
-Harcsa;50;38.5
-Nagy harcsa;1000;500
-Harcsa;50;32.5
-Harcsa;50;38.5
+Süllő;1.2;25.6
+Busa;0.8;20.3
+Fogas;4.5;75
+Kárász;0.6;18.9
+Sügér;1.8;32.4
+Compó;0.5;15.2
+Hejő;1;28.6
+Amur;3.7;67.8
+Csuka;2.9;48.3
+Pisztráng;1.5;36.9
+Domolykó;0.3;11.7
+Szürkeharcsa;8.2;94.5
+Afrikai harcsa;5.1;78.2
+Garda;0.7;22.1
+Balin;1.6;42.9
+Angolna;3.4;60.2
+Ponty;4;54.3
+Bölcsőhal;0.9;20.5
+Szivárványos pisztráng;2.3;40.6
+Ráczhal;0.4;18.2
+Keszegecske;0.3;14.8
+Dorozsmai ponty;3.7;55.2
+Szilvaorrú keszeg;0.5;18.5
+Vörösszárnyú keszeg;1.2;26.3
+Paducsal;0.8;22.4
+Szivárványos pisztráng;2.9;43.1
+Jászhal;0.6;19.3
+Ponty;5.6;68.9
+Csíkos törpeharcsa;1.4;31.8
+Sudár ponty;4.2;58.7
+Füstösfejű keszeg;0.7;21.5
+Tükörmoly;0.9;24.7
+Harcsa;6.8;80.5
+Rőtszárnyú keszeg;0.8;23.6
+Csukalakó;2.5;47.9
+Fejtörőkeszeg;0.6;17.2
+Foltos nyúlharcsa;2.3;40.8
+Tükörponty;4.5;62.1
+Ezüstkösű csuka;3.2;55.6
+Feketeszájú csuka;1.8;37.4
+Aranykösű kárász;1;26.8
+Aranyharcsa;8.6;98.4
+Cápa sügér;2.1;42.5
+Ezüstfejű keszeg;0.9;26.5
+Aranykeszeg;1.5;31.9
+Bajszos sügér;1.3;29.4
+Gömbölyűtörpe harcsa;1.1;27.3
+Vörösszárnyú busa;0.7;21.8
+Héjasüllő;1.6;34.7
+Bőrlapos keszeg;0.4;15.6
+Széleskörű törpeharcsa;0.8;23.7
+Pompás ponty;6.2;72.8
+Pompás süllő;2.8;52.6
+Ragadozó kárász;1.4;32.9
+Ragadozó törpe harcsa;1.6;35.2
+Házi ponty;3.5;58.4
+Csíkos harcsa;5.3;70.3
+Csíkos csuka;3.9;63.8
+Zöldfejű csuka;2.1;44.7
+Kékponty;4.7;66.5
+Aranyhal;7.5;85.2
+Tarka ponty;5.6;78.4
+Tarka csuka;4.2;65.7
+Tarka sügér;2.8;52.6
+Tarka kárász;1.9;37.4
+Tarka keszeg;1.4;28.5

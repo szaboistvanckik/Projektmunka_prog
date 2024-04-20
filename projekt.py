@@ -91,9 +91,9 @@ def conditional_round(x, db, header, choice, tool): # Kerekítés ha a felhaszn�
 def start_choice(text): # ASCII art és mód kiválasztása
     system("cls")
     print(text[1])
-    good = ["1", "2", "3", "4"]
+    good = ["1", "2", "3", "q"]
     choice = input(text[2])
-    return int(valid_choice(choice, good))
+    return valid_choice(choice, good)
 
 def fchoose2(text): # Fájl kiválasztása
     file_choice = input(text[4])
@@ -145,11 +145,12 @@ def wantexit(text, choice, fr): # Ki akar-e lépni a felhaszáló? függvény
         modes(text, choice, fr)
 
 def modes(text, choice, fr): # Eszközök kiválasztása
-    if choice == 1: # Első mód
+    output = data_read(0, fr)
+    if choice == "1": # Első mód
         print(text[5])
         choice2 = input(text[2])
-        good = ["1","2","3","4","5","6","7", "q"]
-        modes = [mode1, mode2, mode3, mode4, mode5, mode6, mode7]
+        good = ["1","2","3","4","5","6","7","8","9","q"]
+        modes = [mode1, mode2, mode3, mode4, mode5, mode6, mode7, mode8, mode9]
         tool_choice = valid_choice(choice2, good)
         
         if tool_choice == "q": # Visszalépés biztosítása a felhasználó számára
@@ -158,11 +159,15 @@ def modes(text, choice, fr): # Eszközök kiválasztása
         else:
             modes[int(tool_choice)-1](text, choice, fr)
 
-    elif choice == 2: # Második mód
-        print("work in progress")
-        
-    else: # Harmadik mód
-        print("work in progress")
+    else: # Második mód
+        print("Új rekord hozzáfűzése a fájlhoz\n")
+
+        newrecord = []
+        for i in range(len(output[2])):
+            ans = input(f'Add meg a(z) "{output[2][i]}" adatot: ')
+            newrecord.append(ans)
+        print(newrecord)
+
 
 def randomcolor(text): # Negyedik mód
     system("cls")
@@ -187,7 +192,7 @@ def randomcolor(text): # Negyedik mód
         system(f"color {choice(colors)}")
         randomcolor(text)
     else:    
-        None
+        procedure(text)
 
 def minimum_or_maximum(l, isMax=False, minindex=0):
     m = minindex
@@ -198,7 +203,7 @@ def minimum_or_maximum(l, isMax=False, minindex=0):
 
 def data_read(datachoice, fr): # Adatok beolvasása az adattömbből majd eltárolása & különböző műveletek végrehajtása
     db, x = 0, 0
-    data, output, names = [], [], []
+    data, output, names, alldata = [], [], [], []
 
     fr.seek(0)
     header = fr.readline().strip().split(";")
@@ -207,11 +212,15 @@ def data_read(datachoice, fr): # Adatok beolvasása az adattömbből majd eltár
         db += 1
         cut = line.split(";")
         names.append(cut[0])
-        x += float(cut[datachoice-1])
-        data.append(float(cut[datachoice-1].strip()))
+        alldata.append(cut)
+        if datachoice != 1: # Ha nem str típussal dolgozunk akkor legyen float az adat hogy össze lehessen hasonlítani
+            x += float(cut[datachoice-1])
+            data.append(float(cut[datachoice-1].strip()))
+        else: # Ha str-el dolgozunk akkor legyen str az adat :)
+            data.append(cut[datachoice-1].strip())
         line = fr.readline().strip()
     
-    stuff = [x, db, header, data, names]
+    stuff = [x, db, header, data, names, alldata]
     for i in range(len(stuff)):
         output.append(stuff[i])
     return output
@@ -247,6 +256,7 @@ def mode4(text, choice, fr): # Minimum
     mini = minimum_or_maximum(output[3])
 
     conditional_round(output[3][mini], 1, output[2], datachoice, tool)
+    print(f"Ennek a(z) {output[2][0]} a neve: {output[4][mini]}")
     wantexit(text, choice, fr)
 
 def mode5(text, choice, fr): # Maximum
@@ -257,6 +267,7 @@ def mode5(text, choice, fr): # Maximum
     maxi = minimum_or_maximum(output[3], True)
 
     conditional_round(output[3][maxi], 1, output[2], datachoice, tool)
+    print(f"Ennek a(z) {output[2][0]} a neve: {output[4][maxi]}")
     wantexit(text, choice, fr)
 
 def insertion_sort(l, ascending=False): # Minimum/maximum kiválasztásos rendezés
@@ -293,28 +304,98 @@ def mode7(text, choice, fr): # Keresés
     datachoice = whichdata(text, fr, 0)
     output = data_read(datachoice, fr)
     
+    if datachoice != 1: # Ha nem név alapján keresünk akkor legyen az adatunk Float hogy össze tudjuk hasonlítani
+        ans = float(input("Keresés a következőre: "))
+    else:
+        ans = input("Keresés a következőre: ")
+        ans = ans.capitalize()
     
-    ans = float(input("Keresés a következőre: "))
-
     i = 0
     while i < len(output[3]) and output[3][i] != ans:
         i += 1
 
     if i < len(output[3]):
-        print("Sikeres keresés!")
-        if datachoice != 1:
-            print("A hal neve: " + output[4][i])
+        print("Sikeres keresés!\n")
+        print("A keresett elem rekordja:")
+        for j in range(len(output[5][i])): # Mátrix meg ilyenek
+            print(f"{output[2][j]}: {output[5][i][j]}")
     else:
-        print("Sikertelen keresés!")
-        print("Legközelebbi érték: ") # Ez majd be lesz fejezve valamikor
+        if datachoice != 1:
+            print("Sikertelen keresés!\n")
+            mini = 0
+            min_distance = abs(output[3][0] - ans)
+            for i in range(1, len(output[3])):
+                distance = abs(output[3][i] - ans)
+                if distance < min_distance:
+                    mini = i
+                    min_distance = distance
+                
+            print(f"Legközelebbi elem rekordja:")
+            for j in range(len(output[5][mini])): # Egy kis mátrix vagy mi
+                print(f"{output[2][j]}: {output[5][mini][j]}")
+        else:
+            print("Sikertelen keresés!") # Szöveg alapján nincs legközelebbi elem mert azt nem tudom hogy kell megcsinálni
 
-    
     wantexit(text, choice, fr)
+
+def mode8(text, choice, fr):
+    datachoice = whichdata(text, fr, 1)
+    output = data_read(datachoice, fr)
+
+    assorted, current = [], []
+    print(f"\nMi alapján szeretnéd a(z) {output[2][datachoice-1]} elemeket kiválogatni?")
+    print(text[12])
+    good = ["1", "2"]
+    assort_by = input(text[2])
+    assort_by = valid_choice(assort_by, good)
+    if assort_by == "1":
+        assort_text = "kisebb"
+    else:
+        assort_text = "nagyobb"
+
+    x = float(input(f'Add meg a számot aminél {assort_text} legyen a(z) "{output[2][datachoice-1]}" elemei: '))
+    for i in range(len(output[3])):
+        if assort_by == "1":
+            if output[3][i] < x:
+                assorted.append(output[3][i])
+                current.append(i)
+        else:
+            if output[3][i] > x:
+                assorted.append(output[3][i])
+                current.append(i)
+    if assorted == []:
+        print("Nincsenek ilyen elemek!")
+    else:
+        for i in range(len(assorted)):
+            print(current[i]+1, assorted[i], end=" ")
+
+    wantexit(text, choice, fr)
+
+def mode9(text, choice, fr):
+    output = data_read(0, fr)
+    r = randint(0, len(output[5])-1)
+    for i in range(len(output[2])):
+        print(f"{output[2][i]}: {output[5][r][i]}")
+    
+    good = ["y", "n", "q"]
+    another = input("\nKérsz mégegy random rekordot? (y/n): ")
+    another = valid_choice(another, good)
+    if another == "y":
+        mode9(text, choice, fr)
+    else:
+        sleep(0.25)
+        system("cls")
+        modes(text, choice, fr)
+
 
 def procedure(text_list): # Ez azért van itt külön mert a visszalépés gomb ezt hívja meg... tiszta kód? Nem.
     pick = start_choice(text_list)
     
-    while not pick != 4:
+    while not pick != "q":
+        print("\nKilépés...")
+        exit()
+
+    while not pick != "3":
         randomcolor(text_list)
         pick = start_choice(text_list)
     else:

@@ -9,8 +9,8 @@ Lehetséges módok:
 
 1.: Adat megjelenítő eszközök
 2.: Adat rögzítés manuálisan
-3.: Adat rögzítés más fájl segítségével
-4.: Betűszín megváltoztatása
+3.: Betűszín megváltoztatása
+q.: Kilépés
 ---
 
 Válaszd ki milyen módban szeretnéd elindítani a programot: 
@@ -30,6 +30,8 @@ Elérhető eszközök:
 5.: Maximum
 6.: Rendezés
 7.: Keresés
+8.: Kiválogatás
+9.: Random rekord megjelenítése
 q.: Visszalépés / Más fájl kiválasztása
 ---
 
@@ -60,3 +62,6 @@ Lehetséges színek:
 ---
 
 Add meg a szín betüjét vagy a számát:  
+---
+1. Legyen kisebb mint ...
+2. Legyen nagyobb mint ...
