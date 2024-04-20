@@ -56,19 +56,18 @@ def conditional_round(x, db, header, choice, tool): # Kerekítés ha a felhaszn�
         if tool == i:
             text = texts[i]
 
+    dot = 0
+    if x % db != 0: 
+        for i in range(len(str(x/db))): # Megkeresi hol van a számban a tizedespont
+            if str(x/db)[i] == ".":
+                dot = i
+        db2 = -1
+        for i in range(dot, len(str(x/db))): # Megnézi hogy hány tizedesjegy van a tizedespont után
+            db2 += 1
+    else:
+        db2 = 0 # Ha a szám az Int típusú akkor a 0. tizedesjegyig lehet kerekíteni
+
     if isrounded == "y": # Ha kerekítés
-        dot = 0
-        if x != int(x):
-            for i in range(len(str(x/db))): # Megkeresi hol van a számban a tizedespont
-                if str(x/db)[i] == ".":
-                    dot = i
-            db2 = -1
-            for i in range(dot, len(str(x/db))): # Megnézi hogy hány tizedesjegy van a tizedespont után
-                db2 += 1
-        else:
-            db2 = 0 # Ha a szám az Int típusú akkor a 0. tizedesjegyig lehet kerekíteni
-        
-            
         print(f"\nEnnél a számnál maximum a(z) {db2}. tizedesjegyig lehet kerekíteni!")
         point = int(input("Kerekítés pontossága (tizedesjegyek száma): "))
         while point > db2 or point < 0: # Felhasználói felület biztosítása, ne lehessen 0-nál kisebb, vagy a tizedesjegy számánál nagyobb
@@ -81,7 +80,7 @@ def conditional_round(x, db, header, choice, tool): # Kerekítés ha a felhaszn�
         else:
             print(f"A(z) {header[choice-1]} elemek {text} kerekítve {point} tizedesjegy pontosságra: {int(round(x/db))}")
     else:    
-        if x != int(x):
+        if db2 != 0: # Nincs kerekítés + nem int
             print(f"A(z) {header[choice-1]} elemek {text} kerekítés nélkül: {x/db}")
         else:
             print(f"A(z) {header[choice-1]} elemek {text} kerekítés nélkül: {int(x/db)}")
@@ -145,7 +144,6 @@ def wantexit(text, choice, fr): # Ki akar-e lépni a felhaszáló? függvény
         modes(text, choice, fr)
 
 def modes(text, choice, fr): # Eszközök kiválasztása
-    output = data_read(0, fr)
     if choice == "1": # Első mód
         print(text[5])
         choice2 = input(text[2])
@@ -160,6 +158,7 @@ def modes(text, choice, fr): # Eszközök kiválasztása
             modes[int(tool_choice)-1](text, choice, fr)
 
     else: # Második mód
+        output = data_read(0, fr)
         print("Új rekord hozzáfűzése a fájlhoz\n")
 
         newrecord = []
@@ -217,7 +216,7 @@ def data_read(datachoice, fr): # Adatok beolvasása az adattömbből majd eltár
             x += float(cut[datachoice-1])
             data.append(float(cut[datachoice-1].strip()))
         else: # Ha str-el dolgozunk akkor legyen str az adat :)
-            data.append(cut[datachoice-1].strip())
+            data.append(cut[datachoice-1].strip().lower())
         line = fr.readline().strip()
     
     stuff = [x, db, header, data, names, alldata]
@@ -226,8 +225,7 @@ def data_read(datachoice, fr): # Adatok beolvasása az adattömbből majd eltár
     return output
 
 def mode1(text, choice, fr): # Megszámolás
-    datachoice = 2 # Ez lehet probléma lesz a jövőben
-    output = data_read(datachoice, fr)
+    output = data_read(0, fr)
     print(f"Az adattömböd összesen {output[1]}db rekordot tartalmaz!\n")
     wantexit(text, choice, fr)
 
@@ -256,7 +254,7 @@ def mode4(text, choice, fr): # Minimum
     mini = minimum_or_maximum(output[3])
 
     conditional_round(output[3][mini], 1, output[2], datachoice, tool)
-    print(f"Ennek a(z) {output[2][0]} a neve: {output[4][mini]}")
+    print(f"A(z) {output[2][0]}: {output[4][mini]}")
     wantexit(text, choice, fr)
 
 def mode5(text, choice, fr): # Maximum
@@ -267,7 +265,7 @@ def mode5(text, choice, fr): # Maximum
     maxi = minimum_or_maximum(output[3], True)
 
     conditional_round(output[3][maxi], 1, output[2], datachoice, tool)
-    print(f"Ennek a(z) {output[2][0]} a neve: {output[4][maxi]}")
+    print(f"A(z) {output[2][0]}: {output[4][maxi]}")
     wantexit(text, choice, fr)
 
 def insertion_sort(l, ascending=False): # Minimum/maximum kiválasztásos rendezés
@@ -303,13 +301,13 @@ def mode6(text, choice, fr): # Rendezés
 def mode7(text, choice, fr): # Keresés
     datachoice = whichdata(text, fr, 0)
     output = data_read(datachoice, fr)
-    
+
     if datachoice != 1: # Ha nem név alapján keresünk akkor legyen az adatunk Float hogy össze tudjuk hasonlítani
         ans = float(input("Keresés a következőre: "))
     else:
         ans = input("Keresés a következőre: ")
-        ans = ans.capitalize()
-    
+        ans = ans.lower()
+
     i = 0
     while i < len(output[3]) and output[3][i] != ans:
         i += 1
@@ -318,7 +316,10 @@ def mode7(text, choice, fr): # Keresés
         print("Sikeres keresés!\n")
         print("A keresett elem rekordja:")
         for j in range(len(output[5][i])): # Mátrix meg ilyenek
-            print(f"{output[2][j]}: {output[5][i][j]}")
+            if datachoice-1 == j:
+                print(f"*{output[2][j]}: {output[5][i][j]}")
+            else:
+                print(f"{output[2][j]}: {output[5][i][j]}")
     else:
         if datachoice != 1:
             print("Sikertelen keresés!\n")
@@ -332,11 +333,21 @@ def mode7(text, choice, fr): # Keresés
                 
             print(f"Legközelebbi elem rekordja:")
             for j in range(len(output[5][mini])): # Egy kis mátrix vagy mi
-                print(f"{output[2][j]}: {output[5][mini][j]}")
+                if datachoice-1 == j:
+                    print(f"*{output[2][j]}: {output[5][mini][j]}")
+                else:
+                    print(f"{output[2][j]}: {output[5][mini][j]}")
         else:
             print("Sikertelen keresés!") # Szöveg alapján nincs legközelebbi elem mert azt nem tudom hogy kell megcsinálni
 
     wantexit(text, choice, fr)
+
+def is_number(x):
+    try:
+        float(x)   
+    except ValueError:
+        return False
+    return True
 
 def mode8(text, choice, fr):
     datachoice = whichdata(text, fr, 1)
@@ -353,9 +364,13 @@ def mode8(text, choice, fr):
     else:
         assort_text = "nagyobb"
 
-    x = float(input(f'Add meg a számot aminél {assort_text} legyen a(z) "{output[2][datachoice-1]}" elemei: '))
+    x = input(f'Add meg a számot aminél {assort_text} legyen a(z) "{output[2][datachoice-1]}" elemei: ')
+    while not is_number(x):
+        x = input(f"Csak számot adhatsz meg!\nKérlek adj meg valami mást: ")
+    x = float(x)
+
     for i in range(len(output[3])):
-        if assort_by == "1":
+        if assort_by == 1:
             if output[3][i] < x:
                 assorted.append(output[3][i])
                 current.append(i)
@@ -374,6 +389,7 @@ def mode8(text, choice, fr):
 def mode9(text, choice, fr):
     output = data_read(0, fr)
     r = randint(0, len(output[5])-1)
+    print(f"{r+1}. rekord:\n")
     for i in range(len(output[2])):
         print(f"{output[2][i]}: {output[5][r][i]}")
     
