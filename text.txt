@@ -65,3 +65,11 @@ Add meg a szín betüjét vagy a számát:
 ---
 1. Legyen kisebb mint ...
 2. Legyen nagyobb mint ...
+---
+
+Hova szeretnéd kiírni a kiválogatott adatokat?
+
+1. Konzol
+2. Fájl (kivalogatott.txt)
+
+Válaszd ki milyen módban szeretnéd elindítani a programot: 

@@ -1,0 +1,53 @@
+Madár neve;Súly (kg);Szárny hossza (cm);Élettartam (év)
+Seregély;0.2;25;4
+Harkály;0.25;30;5
+Fecske;0.03;30;4
+Holló;0.5;100;10
+Gólya;3.5;220;20
+Szarka;0.3;45;8
+Sólyom;1.2;150;15
+Héja;0.6;120;12
+Fácán;1.2;70;8
+Gólyatöcs;0.4;65;6
+Vándorrigó;0.15;35;4
+Karvaly;0.5;110;12
+Rigó;0.1;25;3
+Feketerigó;0.1;30;5
+Rózsás pelikán;4.5;300;25
+Varjú;0.4;50;8
+Kakukk;0.1;30;6
+Rétisas;1.5;180;18
+Denevér;0.1;30;15
+Szajkó;0.25;40;7
+Vörös vércse;0.6;100;12
+Szürke gém;0.5;90;10
+Vízisikló;0.2;35;5
+Kis gyurgyalag;0.1;25;6
+Hamvas gébics;0.2;30;4
+Nagy kócsag;1.2;120;15
+Vízityúk;0.3;45;8
+Feketególya;2.1;200;20
+Gyöngybagoly;0.4;60;10
+Európai lúd;3.2;120;15
+Kis lile;0.2;35;7
+Tavirózsa;0.15;30;6
+Kerecsensólyom;0.8;130;18
+Fehér gólya;3.2;250;25
+Kormorán;2.2;180;20
+Túzok;10.1;200;15
+Gólyapók;0.2;50;7
+Juharbagoly;0.3;40;8
+Rózsás flamingó;4.5;300;30
+Kékvércse;0.5;90;10
+Ibolyás bütykös;0.1;30;8
+Kis hattyú;4.1;150;20
+Vörösbegy;0.2;35;8
+Csaba hattyú;8.2;300;25
+Kék vércse;0.4;70;10
+Hamvas kékbegy;0.15;30;8
+Örvös galamb;0.3;45;5
+Tövisszúró gébics;0.2;40;7
+Aranysirály;0.5;70;15
+Fekete rétihéja;0.6;90;12
+Füles bagoly;0.5;70;15
+Fekete hattyú;5.1;180;20

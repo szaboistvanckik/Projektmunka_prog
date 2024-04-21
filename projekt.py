@@ -303,11 +303,23 @@ def mode7(text, choice, fr): # Keresés
     output = data_read(datachoice, fr)
 
     if datachoice != 1: # Ha nem név alapján keresünk akkor legyen az adatunk Float hogy össze tudjuk hasonlítani
-        ans = float(input("Keresés a következőre: "))
+        ans = input("Keresés a következőre: ")
+        while not is_number(ans):
+            ans = input("Csak számot adhatsz meg!\nKérlek adj meg valami mást: ")
+        ans = float(ans)
     else:
         ans = input("Keresés a következőre: ")
+        while is_number(ans):
+            ans = input("Csak szöveget adhatsz meg!\nKérlek adj meg valami mást: ")
         ans = ans.lower()
 
+    db = 0
+    indexes = []
+    for i in range(len(output[3])):
+        if ans == output[3][i]:
+            db += 1
+            indexes.append(i)
+        
     i = 0
     while i < len(output[3]) and output[3][i] != ans:
         i += 1
@@ -320,6 +332,24 @@ def mode7(text, choice, fr): # Keresés
                 print(f"*{output[2][j]}: {output[5][i][j]}")
             else:
                 print(f"{output[2][j]}: {output[5][i][j]}")
+        if db > 1:
+            certain = input(f"\nTöbb ilyen rekordot is találtunk: összesen {db-1}db-ot ezen kívül.\nAzokat is szeretnéd kiírni a konzolra? (y/n): ")
+            
+            good = ["y", "n"]
+            certain = valid_choice(certain, good)
+            while not certain:
+                certain = input(text[3])
+
+            if certain == "y":
+                for j in range(1, len(indexes)):
+                    print(f"{indexes[j]+1}. rekord:")
+                    for k in range(len(output[5][i])):
+                        if datachoice-1 == k:
+                            print(f"*{output[2][k]}: {output[5][indexes[j]][k]}")
+                        else:    
+                            print(f"{output[2][k]}: {output[5][indexes[j]][k]}")
+                    print()
+
     else:
         if datachoice != 1:
             print("Sikertelen keresés!\n")
@@ -349,7 +379,7 @@ def is_number(x):
         return False
     return True
 
-def mode8(text, choice, fr):
+def mode8(text, choice, fr): # Kiválogatás
     datachoice = whichdata(text, fr, 1)
     output = data_read(datachoice, fr)
 
@@ -370,7 +400,7 @@ def mode8(text, choice, fr):
     x = float(x)
 
     for i in range(len(output[3])):
-        if assort_by == 1:
+        if assort_by == "1":
             if output[3][i] < x:
                 assorted.append(output[3][i])
                 current.append(i)
@@ -381,9 +411,35 @@ def mode8(text, choice, fr):
     if assorted == []:
         print("Nincsenek ilyen elemek!")
     else:
-        for i in range(len(assorted)):
-            print(current[i]+1, assorted[i], end=" ")
-
+        good = ["1", "2"]
+        consOrfile = input(text[13])
+        consOrfile = valid_choice(consOrfile, good)
+        while not consOrfile:
+            consOrfile = input(text[3])
+        
+        if consOrfile == "2":
+            fw = open("kivalogatott.txt", "w", encoding="UTF-8")
+            for i in range(len(output[2])):
+                if i == 0:
+                    fw.write(f"{output[2][i]}")
+                else:
+                    fw.write(f";{output[2][i]}")
+            fw.write("\n")
+            for i in range(len(assorted)):
+                for j in range(len(output[5][i])):
+                    if j == 0:
+                        fw.write(f"{output[5][current[i]][j]}")
+                    else:
+                        fw.write(f";{output[5][current[i]][j]}")
+                fw.write("\n")
+            fw.close()
+            print('\nSikeres írás!\nNézd meg a "kivalogatott.txt" fájlt!\n')
+        else:
+            print(f'\nKiválogatott "{output[2][datachoice-1]}" adat(ok):')
+            for i in range(len(assorted)):
+                print(f"{current[i]+1}. rekord: {assorted[i]}")
+            print()
+    
     wantexit(text, choice, fr)
 
 def mode9(text, choice, fr):
