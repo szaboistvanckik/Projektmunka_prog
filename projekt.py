@@ -143,6 +143,38 @@ def wantexit(text, choice, fr): # Ki akar-e lépni a felhaszáló? függvény
         system("cls")
         modes(text, choice, fr)
 
+def add_data(f, text):
+    system("cls")
+    output = data_read(0, f)
+    print("Új rekord hozzáfűzése a fájlhoz:\n")
+
+    newrecord = []
+    for i in range(len(output[2])):
+        ans = input(f'Add meg a(z) "{output[2][i]}" adatot: ')
+        if i != 0:
+            while not is_number(ans):
+                ans = input(f'A(z) "{output[2][i]}" adat csak szám lehet!\nKérlek adj meg valami mást: ')
+        newrecord.append(ans)
+    
+    n = len(newrecord)
+    f.write("\n")
+    for i in range(len(newrecord)):
+        f.write(newrecord[i])
+        if i != n-1:
+            f.write(";")
+
+    print("\nSikeres hozzáfűzés!\n")
+    certain = input("Szeretnél még adatot hozzáfűzni a fájlhoz? (y/n): ").lower()
+
+    good = ["y", "n"]
+    certain = valid_choice(certain, good)
+    while not certain:
+        certain = input(text[3])
+    if certain == "y":
+        add_data(f, text)
+    else:
+        procedure(text)
+
 def modes(text, choice, fr): # Eszközök kiválasztása
     if choice == "1": # Első mód
         print(text[5])
@@ -158,15 +190,7 @@ def modes(text, choice, fr): # Eszközök kiválasztása
             modes[int(tool_choice)-1](text, choice, fr)
 
     else: # Második mód
-        output = data_read(0, fr)
-        print("Új rekord hozzáfűzése a fájlhoz\n")
-
-        newrecord = []
-        for i in range(len(output[2])):
-            ans = input(f'Add meg a(z) "{output[2][i]}" adatot: ')
-            newrecord.append(ans)
-        print(newrecord)
-
+        add_data(fr, text)
 
 def randomcolor(text): # Negyedik mód
     system("cls")
@@ -196,7 +220,13 @@ def randomcolor(text): # Negyedik mód
 def minimum_or_maximum(l, isMax=False, minindex=0):
     m = minindex
     for i in range(minindex, len(l)):
-        if (l[i] < l[m] and not isMax) or (l[i] > l[m] and isMax):
+        actual = l[i]
+        actual_m = l[m]
+        if isinstance(l[i], str):
+            actual = actual.lower()
+            actual_m = actual_m.lower()
+
+        if (actual < actual_m and not isMax) or (actual > actual_m and isMax):
            m = i
     return m
 
@@ -223,6 +253,34 @@ def data_read(datachoice, fr): # Adatok beolvasása az adattömbből majd eltár
     for i in range(len(stuff)):
         output.append(stuff[i])
     return output
+
+def cons_or_file(text, output, current):
+    good = ["1", "2"]
+    chc = input(text[13])
+    chc = valid_choice(chc, good)
+    while not chc:
+        chc = input(text[3])
+        
+    if chc == "2":
+        fw = open("ki.txt", "w", encoding="UTF-8")
+        for i in range(len(output[2])):
+            if i == 0:
+                fw.write(f"{output[2][i]}")
+            else:
+                fw.write(f";{output[2][i]}")
+        fw.write("\n")
+        for i in range(len(current)):
+            for j in range(len(output[5][i])):
+                if j == 0:
+                    fw.write(f"{output[5][current[i]][j]}")
+                else:
+                    fw.write(f";{output[5][current[i]][j]}")
+            fw.write("\n")
+        fw.close()
+        print('\nSikeres írás!\nNézd meg a "ki.txt" fájlt!\n')
+        return True
+    else:
+        return False
 
 def mode1(text, choice, fr): # Megszámolás
     output = data_read(0, fr)
@@ -268,21 +326,27 @@ def mode5(text, choice, fr): # Maximum
     print(f"A(z) {output[2][0]}: {output[4][maxi]}")
     wantexit(text, choice, fr)
 
-def insertion_sort(l, ascending=False): # Minimum/maximum kiválasztásos rendezés
+def insertion_sort(l, ascending=False, wantindeces=False): # Minimum/maximum kiválasztásos rendezés
     y = []
-    for e in l:
-        y.append(e)
+    y_i = []
+    for i in range(len(l)):
+        y.append(l[i])
+        y_i.append(i)
 
     for i in range(len(y)):
         j = minimum_or_maximum(y, ascending, i)
         if y[i] != y[j]:
             y[i], y[j] = y[j], y[i]
-    return y
+            y_i[i], y_i[j] = y_i[j], y_i[i]
+    if not wantindeces:
+        return y
+    else:
+        return y_i
 
 def mode6(text, choice, fr): # Rendezés
     datachoice = whichdata(text, fr, 0)
+    output = data_read(datachoice, fr)
     data = []
-    names = []
 
     fr.seek(0)
     header = fr.readline().strip().split(";")
@@ -293,10 +357,26 @@ def mode6(text, choice, fr): # Rendezés
             data.append(float(cut[datachoice-1].strip()))
         else:
             data.append(cut[datachoice-1].strip())
-        names.append(cut[0].strip())
         line = fr.readline()
 
-    print(*insertion_sort(data, bool(input())))
+    print("\n" + text[14] + "\n\n")
+    chc = input("Milyen sorrendben szeretnéd látni az adatokat?: ").lower()
+    good = ["1", "2"]
+    chc = valid_choice(chc, good)
+
+    assorted = insertion_sort(data, chc == "2", True)
+
+    done = cons_or_file(text, output, assorted)
+    if not done:
+        for i in range(len(data)):
+            if datachoice != 1:
+                print(str(i + 1) + ". " + output[4][i] + ": " + str(data[assorted[i]]))
+            else:
+                print(str(i + 1) + ". " + str(data[assorted[i]]))
+
+    print()
+
+    wantexit(text, choice, fr)
 
 def mode7(text, choice, fr): # Keresés
     datachoice = whichdata(text, fr, 0)
@@ -411,30 +491,8 @@ def mode8(text, choice, fr): # Kiválogatás
     if assorted == []:
         print("Nincsenek ilyen elemek!")
     else:
-        good = ["1", "2"]
-        consOrfile = input(text[13])
-        consOrfile = valid_choice(consOrfile, good)
-        while not consOrfile:
-            consOrfile = input(text[3])
-        
-        if consOrfile == "2":
-            fw = open("kivalogatott.txt", "w", encoding="UTF-8")
-            for i in range(len(output[2])):
-                if i == 0:
-                    fw.write(f"{output[2][i]}")
-                else:
-                    fw.write(f";{output[2][i]}")
-            fw.write("\n")
-            for i in range(len(assorted)):
-                for j in range(len(output[5][i])):
-                    if j == 0:
-                        fw.write(f"{output[5][current[i]][j]}")
-                    else:
-                        fw.write(f";{output[5][current[i]][j]}")
-                fw.write("\n")
-            fw.close()
-            print('\nSikeres írás!\nNézd meg a "kivalogatott.txt" fájlt!\n')
-        else:
+        done = cons_or_file(text, output, current)
+        if not done:
             print(f'\nKiválogatott "{output[2][datachoice-1]}" adat(ok):')
             for i in range(len(assorted)):
                 print(f"{current[i]+1}. rekord: {assorted[i]}")
@@ -450,7 +508,7 @@ def mode9(text, choice, fr):
         print(f"{output[2][i]}: {output[5][r][i]}")
     
     good = ["y", "n", "q"]
-    another = input("\nKérsz mégegy random rekordot? (y/n): ")
+    another = input("\nKérsz még egy random rekordot? (y/n): ")
     another = valid_choice(another, good)
     if another == "y":
         mode9(text, choice, fr)
