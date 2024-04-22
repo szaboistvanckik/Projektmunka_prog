@@ -46,7 +46,7 @@ def load_text(x): # Betölti a szöveget amit használunk a text.txt állományb
     fr.close()
     return x
 
-def conditional_round(x, db, header, choice, tool): # Kerekítés ha a felhasználó kéri
+def conditional_round(x, db, header, choice, tool, text): # Kerekítés ha a felhasználó kéri
     good = ["y", "n"]
     isrounded = input("Szeretnél kerekíteni kiírás előtt? (y/n): ")
     isrounded = valid_choice(isrounded, good)
@@ -54,7 +54,7 @@ def conditional_round(x, db, header, choice, tool): # Kerekítés ha a felhaszn�
     texts = ["összege", "átlaga", "minimumja", "maximumja"] # A módok szövegei
     for i in range(len(texts)):
         if tool == i:
-            text = texts[i]
+            text_r = texts[i]
 
     dot = 0
     if x % db != 0: 
@@ -69,21 +69,27 @@ def conditional_round(x, db, header, choice, tool): # Kerekítés ha a felhaszn�
 
     if isrounded == "y": # Ha kerekítés
         print(f"\nEnnél a számnál maximum a(z) {db2}. tizedesjegyig lehet kerekíteni!")
-        point = int(input("Kerekítés pontossága (tizedesjegyek száma): "))
+        point = input(text[15])
+        while not is_number(point, int):
+            point = input(text[16])
+        point = int(point)
+
         while point > db2 or point < 0: # Felhasználói felület biztosítása, ne lehessen 0-nál kisebb, vagy a tizedesjegy számánál nagyobb
             print(f"\nEnnél a számnál maximum a(z) {db2}. tizedesjegyig lehet kerekíteni!")
-            point = int(input("Kerekítés pontossága (tizedesjegyek száma): "))
-
+            point = input(text[15])
+            while not is_number(point, int):
+                point = input(text[16])
+            point = int(point)
 
         if point != 0: # Ez azért kell mert 38.5 int --> 38, de 38.5 int+round --> 39
-            print(f"A(z) {header[choice-1]} elemek {text} kerekítve {point} tizedesjegy pontosságra: {round(x/db, point)}")
+            print(f"\nA(z) {header[choice-1]} elemek {text_r} kerekítve {point} tizedesjegy pontosságra: {round(x/db, point)}")
         else:
-            print(f"A(z) {header[choice-1]} elemek {text} kerekítve {point} tizedesjegy pontosságra: {int(round(x/db))}")
+            print(f"\nA(z) {header[choice-1]} elemek {text_r} kerekítve {point} tizedesjegy pontosságra: {int(round(x/db))}")
     else:    
         if db2 != 0: # Nincs kerekítés + nem int
-            print(f"A(z) {header[choice-1]} elemek {text} kerekítés nélkül: {x/db}")
+            print(f"\nA(z) {header[choice-1]} elemek {text_r} kerekítés nélkül: {x/db}")
         else:
-            print(f"A(z) {header[choice-1]} elemek {text} kerekítés nélkül: {int(x/db)}")
+            print(f"\nA(z) {header[choice-1]} elemek {text_r} kerekítés nélkül: {int(x/db)}")
 
 #//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#//#
 
@@ -116,12 +122,12 @@ def fchoose(text, choice):
     system("cls")
     return file
 
-def whichdata(text, file, x): # Ez arra szolgál hogy amíg ugyanabban a formában van megadva az adat, mindig jó legyen a program
-    good = []
+def whichdata(text, filename, x): # Ez arra szolgál hogy amíg ugyanabban a formában van megadva az adat, mindig jó legyen a program
+    fr = open(filename, "r", encoding="UTF-8")
+    headers = fr.readline().strip().split(";")
+    fr.close()
     
-    file.seek(0)
-    line = file.readline()
-    headers = line.split(";")
+    good = []
     print(text[7])
     for i in range(x, len(headers)): # x változó --> Melyik adatokat használhatja a felhasználó
         print(f"{i+1}. {headers[i]}") # Tudatja a felhasználóval az elérhető adatokat
@@ -130,7 +136,7 @@ def whichdata(text, file, x): # Ez arra szolgál hogy amíg ugyanabban a formáb
     choice = input(text[2])
     return int(valid_choice(choice, good)) # Amíg a választott szám nincs benne a "jók" listában a felhasználó NEM léphet tovább
 
-def wantexit(text, choice, fr): # Ki akar-e lépni a felhaszáló? függvény
+def wantexit(text, choice, filename): # Ki akar-e lépni a felhaszáló? függvény
     good = ["y", "n"] # "jók" lista
     isexit = input(text[8]) # választás
     isexit = valid_choice(isexit, good) # választás benne a "jók" listában?
@@ -141,27 +147,32 @@ def wantexit(text, choice, fr): # Ki akar-e lépni a felhaszáló? függvény
     else:
         sleep(0.25)
         system("cls")
-        modes(text, choice, fr)
+        modes(text, choice, filename)
 
-def add_data(f, text):
+def add_data(filename, text):
     system("cls")
-    output = data_read(0, f)
+    output = data_read(0, filename)
     print("Új rekord hozzáfűzése a fájlhoz:\n")
 
     newrecord = []
     for i in range(len(output[2])):
         ans = input(f'Add meg a(z) "{output[2][i]}" adatot: ')
         if i != 0:
-            while not is_number(ans):
+            while not is_number(ans, float):
                 ans = input(f'A(z) "{output[2][i]}" adat csak szám lehet!\nKérlek adj meg valami mást: ')
+        else:
+            while is_number(ans, float):
+                ans = input(f'A(z) "{output[2][i]}" adat csak szöveg lehet!\nKérlek adj meg valami mást: ')
         newrecord.append(ans)
     
+    fa = open(filename, "a", encoding="UTF-8")
     n = len(newrecord)
-    f.write("\n")
+    fa.write("\n")
     for i in range(len(newrecord)):
-        f.write(newrecord[i])
+        fa.write(newrecord[i])
         if i != n-1:
-            f.write(";")
+            fa.write(";")
+    fa.close()
 
     print("\nSikeres hozzáfűzés!\n")
     certain = input("Szeretnél még adatot hozzáfűzni a fájlhoz? (y/n): ").lower()
@@ -171,11 +182,11 @@ def add_data(f, text):
     while not certain:
         certain = input(text[3])
     if certain == "y":
-        add_data(f, text)
+        add_data(filename, text)
     else:
         procedure(text)
 
-def modes(text, choice, fr): # Eszközök kiválasztása
+def modes(text, choice, filename): # Eszközök kiválasztása
     if choice == "1": # Első mód
         print(text[5])
         choice2 = input(text[2])
@@ -187,10 +198,10 @@ def modes(text, choice, fr): # Eszközök kiválasztása
             system("cls")
             procedure(text) # Gyakorlatilag újraindítja a programot a 2 másodperces ASCII art nélkül
         else:
-            modes[int(tool_choice)-1](text, choice, fr)
+            modes[int(tool_choice)-1](text, choice, filename)
 
     else: # Második mód
-        add_data(fr, text)
+        add_data(filename, text)
 
 def randomcolor(text): # Negyedik mód
     system("cls")
@@ -230,30 +241,6 @@ def minimum_or_maximum(l, isMax=False, minindex=0):
            m = i
     return m
 
-def data_read(datachoice, fr): # Adatok beolvasása az adattömbből majd eltárolása & különböző műveletek végrehajtása
-    db, x = 0, 0
-    data, output, names, alldata = [], [], [], []
-
-    fr.seek(0)
-    header = fr.readline().strip().split(";")
-    line = fr.readline().strip()
-    while line != "":
-        db += 1
-        cut = line.split(";")
-        names.append(cut[0])
-        alldata.append(cut)
-        if datachoice != 1: # Ha nem str típussal dolgozunk akkor legyen float az adat hogy össze lehessen hasonlítani
-            x += float(cut[datachoice-1])
-            data.append(float(cut[datachoice-1].strip()))
-        else: # Ha str-el dolgozunk akkor legyen str az adat :)
-            data.append(cut[datachoice-1].strip().lower())
-        line = fr.readline().strip()
-    
-    stuff = [x, db, header, data, names, alldata]
-    for i in range(len(stuff)):
-        output.append(stuff[i])
-    return output
-
 def cons_or_file(text, output, current):
     good = ["1", "2"]
     chc = input(text[13])
@@ -282,49 +269,49 @@ def cons_or_file(text, output, current):
     else:
         return False
 
-def mode1(text, choice, fr): # Megszámolás
-    output = data_read(0, fr)
+def mode1(text, choice, filename): # Megszámolás
+    output = data_read(0, filename)
     print(f"Az adattömböd összesen {output[1]}db rekordot tartalmaz!\n")
-    wantexit(text, choice, fr)
+    wantexit(text, choice, filename)
 
-def mode2(text, choice, fr): # Összegzés
+def mode2(text, choice, filename): # Összegzés
     tool = 0 # Erre hivatkozunk a kerekítés függvénynél hogy a módhoz kapcsolódó szöveget írja ki
-    datachoice = whichdata(text, fr, 1)
-    output = data_read(datachoice, fr)
+    datachoice = whichdata(text, filename, 1)
+    output = data_read(datachoice, filename)
     
-    conditional_round(output[0], 1, output[2], datachoice, tool)
-    wantexit(text, choice, fr)
+    conditional_round(output[0], 1, output[2], datachoice, tool, text)
+    wantexit(text, choice, filename)
 
 
-def mode3(text, choice, fr): # Átlag
+def mode3(text, choice, filename): # Átlag
     tool = 1
-    datachoice = whichdata(text, fr, 1)
-    output = data_read(datachoice, fr)
+    datachoice = whichdata(text, filename, 1)
+    output = data_read(datachoice, filename)
     
-    conditional_round(output[0], output[1], output[2], datachoice, tool)
-    wantexit(text, choice, fr)
+    conditional_round(output[0], output[1], output[2], datachoice, tool, text)
+    wantexit(text, choice, filename)
 
-def mode4(text, choice, fr): # Minimum
+def mode4(text, choice, filename): # Minimum
     tool = 2
-    datachoice = whichdata(text, fr, 1)
-    output = data_read(datachoice, fr)
+    datachoice = whichdata(text, filename, 1)
+    output = data_read(datachoice, filename)
     
     mini = minimum_or_maximum(output[3])
 
-    conditional_round(output[3][mini], 1, output[2], datachoice, tool)
-    print(f"A(z) {output[2][0]}: {output[4][mini]}")
-    wantexit(text, choice, fr)
+    conditional_round(output[3][mini], 1, output[2], datachoice, tool, text)
+    print(f"A(z) {output[2][0]}: {output[4][mini]}\n")
+    wantexit(text, choice, filename)
 
-def mode5(text, choice, fr): # Maximum
+def mode5(text, choice, filename): # Maximum
     tool = 3
-    datachoice = whichdata(text, fr, 1)
-    output = data_read(datachoice, fr)
+    datachoice = whichdata(text, filename, 1)
+    output = data_read(datachoice, filename)
     
     maxi = minimum_or_maximum(output[3], True)
 
-    conditional_round(output[3][maxi], 1, output[2], datachoice, tool)
-    print(f"A(z) {output[2][0]}: {output[4][maxi]}")
-    wantexit(text, choice, fr)
+    conditional_round(output[3][maxi], 1, output[2], datachoice, tool, text)
+    print(f"A(z) {output[2][0]}: {output[4][maxi]}\n")
+    wantexit(text, choice, filename)
 
 def insertion_sort(l, ascending=False, wantindeces=False): # Minimum/maximum kiválasztásos rendezés
     y = []
@@ -343,53 +330,41 @@ def insertion_sort(l, ascending=False, wantindeces=False): # Minimum/maximum kiv
     else:
         return y_i
 
-def mode6(text, choice, fr): # Rendezés
-    datachoice = whichdata(text, fr, 0)
-    output = data_read(datachoice, fr)
-    data = []
+def mode6(text, choice, filename): # Rendezés
+    datachoice = whichdata(text, filename, 0)
+    output = data_read(datachoice, filename)
 
-    fr.seek(0)
-    header = fr.readline().strip().split(";")
-    line = fr.readline()
-    while line != "":
-        cut = line.split(";")
-        if datachoice != 1:
-            data.append(float(cut[datachoice-1].strip()))
-        else:
-            data.append(cut[datachoice-1].strip())
-        line = fr.readline()
-
-    print("\n" + text[14] + "\n\n")
+    print(text[14])
     chc = input("Milyen sorrendben szeretnéd látni az adatokat?: ").lower()
     good = ["1", "2"]
     chc = valid_choice(chc, good)
 
-    assorted = insertion_sort(data, chc == "2", True)
+    assorted = insertion_sort(output[3], chc == "2", True)
 
     done = cons_or_file(text, output, assorted)
     if not done:
-        for i in range(len(data)):
+        for i in range(len(output[3])):
             if datachoice != 1:
-                print(str(i + 1) + ". " + output[4][i] + ": " + str(data[assorted[i]]))
+                print(str(i + 1) + ". " + output[4][i] + ": " + str(output[3][assorted[i]]))
             else:
-                print(str(i + 1) + ". " + str(data[assorted[i]]))
+                print(str(i + 1) + ". " + str(output[3][assorted[i]].capitalize()))
 
     print()
 
-    wantexit(text, choice, fr)
+    wantexit(text, choice, filename)
 
-def mode7(text, choice, fr): # Keresés
-    datachoice = whichdata(text, fr, 0)
-    output = data_read(datachoice, fr)
+def mode7(text, choice, filename): # Keresés
+    datachoice = whichdata(text, filename, 0)
+    output = data_read(datachoice, filename)
 
     if datachoice != 1: # Ha nem név alapján keresünk akkor legyen az adatunk Float hogy össze tudjuk hasonlítani
         ans = input("Keresés a következőre: ")
-        while not is_number(ans):
+        while not is_number(ans, float):
             ans = input("Csak számot adhatsz meg!\nKérlek adj meg valami mást: ")
         ans = float(ans)
     else:
         ans = input("Keresés a következőre: ")
-        while is_number(ans):
+        while is_number(ans, float):
             ans = input("Csak szöveget adhatsz meg!\nKérlek adj meg valami mást: ")
         ans = ans.lower()
 
@@ -450,18 +425,18 @@ def mode7(text, choice, fr): # Keresés
         else:
             print("Sikertelen keresés!") # Szöveg alapján nincs legközelebbi elem mert azt nem tudom hogy kell megcsinálni
 
-    wantexit(text, choice, fr)
+    wantexit(text, choice, filename)
 
-def is_number(x):
+def is_number(x, type):
     try:
-        float(x)   
+        type(x)   
     except ValueError:
         return False
     return True
 
-def mode8(text, choice, fr): # Kiválogatás
-    datachoice = whichdata(text, fr, 1)
-    output = data_read(datachoice, fr)
+def mode8(text, choice, filename): # Kiválogatás
+    datachoice = whichdata(text, filename, 1)
+    output = data_read(datachoice, filename)
 
     assorted, current = [], []
     print(f"\nMi alapján szeretnéd a(z) {output[2][datachoice-1]} elemeket kiválogatni?")
@@ -475,7 +450,7 @@ def mode8(text, choice, fr): # Kiválogatás
         assort_text = "nagyobb"
 
     x = input(f'Add meg a számot aminél {assort_text} legyen a(z) "{output[2][datachoice-1]}" elemei: ')
-    while not is_number(x):
+    while not is_number(x, float):
         x = input(f"Csak számot adhatsz meg!\nKérlek adj meg valami mást: ")
     x = float(x)
 
@@ -498,10 +473,10 @@ def mode8(text, choice, fr): # Kiválogatás
                 print(f"{current[i]+1}. rekord: {assorted[i]}")
             print()
     
-    wantexit(text, choice, fr)
+    wantexit(text, choice, filename)
 
-def mode9(text, choice, fr):
-    output = data_read(0, fr)
+def mode9(text, choice, filename):
+    output = data_read(0, filename)
     r = randint(0, len(output[5])-1)
     print(f"{r+1}. rekord:\n")
     for i in range(len(output[2])):
@@ -511,12 +486,37 @@ def mode9(text, choice, fr):
     another = input("\nKérsz még egy random rekordot? (y/n): ")
     another = valid_choice(another, good)
     if another == "y":
-        mode9(text, choice, fr)
+        mode9(text, choice, filename)
     else:
         sleep(0.25)
         system("cls")
-        modes(text, choice, fr)
+        modes(text, choice, filename)
 
+def data_read(datachoice, filename): # Adatok beolvasása az adattömbből majd eltárolása & különböző műveletek végrehajtása
+    db, x = 0, 0
+    data, output, names, alldata = [], [], [], []
+
+    fr = open(filename, mode="r", encoding="UTF-8")
+    fr.seek(0)
+    header = fr.readline().strip().split(";")
+    line = fr.readline().strip()
+    while line != "":
+        db += 1
+        cut = line.split(";")
+        names.append(cut[0])
+        alldata.append(cut)
+        if datachoice != 1: # Ha nem str típussal dolgozunk akkor legyen float az adat hogy össze lehessen hasonlítani
+            x += float(cut[datachoice-1])
+            data.append(float(cut[datachoice-1].strip()))
+        else: # Ha str-el dolgozunk akkor legyen str az adat :)
+            data.append(cut[datachoice-1].strip().lower())
+        line = fr.readline().strip()
+    fr.close()
+
+    stuff = [x, db, header, data, names, alldata]
+    for i in range(len(stuff)):
+        output.append(stuff[i])
+    return output
 
 def procedure(text_list): # Ez azért van itt külön mert a visszalépés gomb ezt hívja meg... tiszta kód? Nem.
     pick = start_choice(text_list)
@@ -529,10 +529,8 @@ def procedure(text_list): # Ez azért van itt külön mert a visszalépés gomb 
         randomcolor(text_list)
         pick = start_choice(text_list)
     else:
-        f = open(fchoose(text_list, pick), mode="a+", encoding="UTF-8")
-        modes(text_list, pick, f)
-
-    f.close()
+        file_name = fchoose(text_list, pick)
+        modes(text_list, pick, file_name)
     
 def main():
     text_list = []

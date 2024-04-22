@@ -74,5 +74,13 @@ Hova szeretnéd kiírni a kiválogatott adatokat?
 
 Válaszd ki milyen módban szeretnéd elindítani a programot: 
 ---
+
 1.: Növekvő sorrend
 2.: Csökkenő sorrend
+
+
+---
+Kerekítés pontossága (tizedesjegyek száma): 
+---
+A tizedesjegyek száma csak egész szám lehet!
+Kérlek adj meg valami mást: 
