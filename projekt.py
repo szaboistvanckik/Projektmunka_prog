@@ -10,7 +10,7 @@ def has(var, list): # Saját "in"
             return True
     return False
 
-def valid_choice(var, list):
+def valid_choice(var, list): # Ha nincs benne egy változó a jók listában akkor valami mást kell megadni
     while not has(var, list):
         var = input("Nincs ilyen opció!\nVálassz mást: ")
     return var
@@ -102,7 +102,7 @@ def start_choice(text): # ASCII art és mód kiválasztása
 
 def fchoose2(text): # Fájl kiválasztása
     file_choice = input(text[4])
-    while not path.exists(file_choice) or file_choice == "text.txt": # path.exists(fájl) --> Ha létezik a fájl akkor True, ha nem akkor False
+    while not path.exists(file_choice) or file_choice == "text.txt" or file_choice == "ki.txt": # path.exists(fájl) --> Ha létezik a fájl akkor True, ha nem akkor False
         file_choice = input("Nem létezik ilyen fájl!\nKérlek válassz mást: ")
     else:
         print(f'Sikeresen kiválasztottad a "{file_choice}" fájlt!')
@@ -149,14 +149,14 @@ def wantexit(text, choice, filename): # Ki akar-e lépni a felhaszáló? függv�
         system("cls")
         modes(text, choice, filename)
 
-def add_data(filename, text):
+def add_data(filename, text): # Hozzáfűzés
     system("cls")
     output = data_read(0, filename)
     print("Új rekord hozzáfűzése a fájlhoz:\n")
 
     newrecord = []
     for i in range(len(output[2])):
-        ans = input(f'Add meg a(z) "{output[2][i]}" adatot: ')
+        ans = input(f'Add meg a(z) "{output[2][i]}" adatot: ') # Felhasználó sorban megad annyi adatot ahány fejléc van
         if i != 0:
             while not is_number(ans, float):
                 ans = input(f'A(z) "{output[2][i]}" adat csak szám lehet!\nKérlek adj meg valami mást: ')
@@ -175,16 +175,16 @@ def add_data(filename, text):
     fa.close()
 
     print("\nSikeres hozzáfűzés!\n")
-    certain = input("Szeretnél még adatot hozzáfűzni a fájlhoz? (y/n): ").lower()
+    certain = input("Szeretnél még adatot hozzáfűzni a fájlhoz? (y/n): ").lower() # .lower() : "DÁVID" --> "dávid"
 
     good = ["y", "n"]
     certain = valid_choice(certain, good)
     while not certain:
         certain = input(text[3])
     if certain == "y":
-        add_data(filename, text)
+        add_data(filename, text) # Futtassa le a függvényt újra
     else:
-        procedure(text)
+        procedure(text) # Indítsa újra az egészet (tiszta kód)
 
 def modes(text, choice, filename): # Eszközök kiválasztása
     if choice == "1": # Első mód
@@ -203,7 +203,7 @@ def modes(text, choice, filename): # Eszközök kiválasztása
     else: # Második mód
         add_data(filename, text)
 
-def randomcolor(text): # Negyedik mód
+def randomcolor(text): # Harmadik mód
     system("cls")
     print(text[9])
     colors = ["a","b","c","d","e","f"] # cmd --> "color help"
@@ -241,7 +241,7 @@ def minimum_or_maximum(l, isMax=False, minindex=0):
            m = i
     return m
 
-def cons_or_file(text, output, current):
+def cons_or_file(text, output, current): # Konzolra vagy fájlba szeretné kiíratni a felhasználó az adatokat
     good = ["1", "2"]
     chc = input(text[13])
     chc = valid_choice(chc, good)
@@ -276,11 +276,11 @@ def mode1(text, choice, filename): # Megszámolás
 
 def mode2(text, choice, filename): # Összegzés
     tool = 0 # Erre hivatkozunk a kerekítés függvénynél hogy a módhoz kapcsolódó szöveget írja ki
-    datachoice = whichdata(text, filename, 1)
-    output = data_read(datachoice, filename)
+    datachoice = whichdata(text, filename, 1) # Melyik adatot választja a felhasználó
+    output = data_read(datachoice, filename) # Beolvassa az összes adatot a felhasználó választásával
     
-    conditional_round(output[0], 1, output[2], datachoice, tool, text)
-    wantexit(text, choice, filename)
+    conditional_round(output[0], 1, output[2], datachoice, tool, text) # Feltételes kerekítés
+    wantexit(text, choice, filename) # Ki szeretne lépni a felhasználó?
 
 
 def mode3(text, choice, filename): # Átlag
@@ -375,19 +375,19 @@ def mode7(text, choice, filename): # Keresés
             db += 1
             indexes.append(i)
         
-    i = 0
+    i = 0 # Megszámolja hogy többször ismétlődik-e ugyanaz az adat
     while i < len(output[3]) and output[3][i] != ans:
         i += 1
 
     if i < len(output[3]):
         print("Sikeres keresés!\n")
         print("A keresett elem rekordja:")
-        for j in range(len(output[5][i])): # Mátrix meg ilyenek
+        for j in range(len(output[5][i])):
             if datachoice-1 == j:
                 print(f"*{output[2][j]}: {output[5][i][j]}")
             else:
                 print(f"{output[2][j]}: {output[5][i][j]}")
-        if db > 1:
+        if db > 1: # Ha többször ismétlődik akkor a felhasználó választhat hogy a többit is kiírja vagy sem
             certain = input(f"\nTöbb ilyen rekordot is találtunk: összesen {db-1}db-ot ezen kívül.\nAzokat is szeretnéd kiírni a konzolra? (y/n): ")
             
             good = ["y", "n"]
@@ -408,7 +408,7 @@ def mode7(text, choice, filename): # Keresés
     else:
         if datachoice != 1:
             print("Sikertelen keresés!\n")
-            mini = 0
+            mini = 0 # Abszolút értékes minkiválasztás --> Legközelebbi elem
             min_distance = abs(output[3][0] - ans)
             for i in range(1, len(output[3])):
                 distance = abs(output[3][i] - ans)
@@ -417,7 +417,7 @@ def mode7(text, choice, filename): # Keresés
                     min_distance = distance
                 
             print(f"Legközelebbi elem rekordja:")
-            for j in range(len(output[5][mini])): # Egy kis mátrix vagy mi
+            for j in range(len(output[5][mini])):
                 if datachoice-1 == j:
                     print(f"*{output[2][j]}: {output[5][mini][j]}")
                 else:
@@ -428,11 +428,11 @@ def mode7(text, choice, filename): # Keresés
     wantexit(text, choice, filename)
 
 def is_number(x, type):
-    try:
-        type(x)   
-    except ValueError:
-        return False
-    return True
+    try: # Lehetővé teszi hogy valamit leteszteljünk hogy Error lesz-e vagy sem
+        type(x)
+    except ValueError: # Ha error akkor
+        return False # False-al térünk vissza
+    return True # Ha nem kapunk errort akkor True
 
 def mode8(text, choice, filename): # Kiválogatás
     datachoice = whichdata(text, filename, 1)
@@ -454,13 +454,13 @@ def mode8(text, choice, filename): # Kiválogatás
         x = input(f"Csak számot adhatsz meg!\nKérlek adj meg valami mást: ")
     x = float(x)
 
-    for i in range(len(output[3])):
+    for i in range(len(output[3])): # Kisebbek legyenek az elemek mint x
         if assort_by == "1":
             if output[3][i] < x:
                 assorted.append(output[3][i])
                 current.append(i)
         else:
-            if output[3][i] > x:
+            if output[3][i] > x: # Nagyobbak legyenek az elemek mint x
                 assorted.append(output[3][i])
                 current.append(i)
     if assorted == []:
@@ -475,7 +475,7 @@ def mode8(text, choice, filename): # Kiválogatás
     
     wantexit(text, choice, filename)
 
-def mode9(text, choice, filename):
+def mode9(text, choice, filename): # Random rekord sorsolás
     output = data_read(0, filename)
     r = randint(0, len(output[5])-1)
     print(f"{r+1}. rekord:\n")
@@ -508,7 +508,7 @@ def data_read(datachoice, filename): # Adatok beolvasása az adattömbből majd 
         if datachoice != 1: # Ha nem str típussal dolgozunk akkor legyen float az adat hogy össze lehessen hasonlítani
             x += float(cut[datachoice-1])
             data.append(float(cut[datachoice-1].strip()))
-        else: # Ha str-el dolgozunk akkor legyen str az adat :)
+        else: # Ha str-el dolgozunk akkor maradjon str az adat :)
             data.append(cut[datachoice-1].strip().lower())
         line = fr.readline().strip()
     fr.close()
@@ -534,12 +534,12 @@ def procedure(text_list): # Ez azért van itt külön mert a visszalépés gomb 
     
 def main():
     text_list = []
-    load_text(text_list)
+    load_text(text_list) # Szöveg betöltése a "text.txt" állományból
 
     system("cls")
-    print(text_list[0]) 
-    sleep(2)
+    print(text_list[0]) # Ascii art
+    sleep(2) # 2 másodperc várakozás
 
-    procedure(text_list)
+    procedure(text_list) # Program fő része
 
 main()

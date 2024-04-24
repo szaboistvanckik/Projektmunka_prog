@@ -1,73 +1,79 @@
-Madár neve;Súly (kg);Szárny hossza (cm);Élettartam (év)
-Seregély;0.2;25;4
-Veréb;0.03;15;3
-Harkály;0.25;30;5
-Fecske;0.03;30;4
-Holló;0.5;100;10
-Gólya;3.5;220;20
-Szarka;0.3;45;8
-Sólyom;1.2;150;15
-Héja;0.6;120;12
-Fácán;1.2;70;8
-Fürj;0.15;20;2
-Gólyatöcs;0.4;65;6
-Vándorrigó;0.15;35;4
-Díszpinty;0.05;20;5
-Karvaly;0.5;110;12
-Rigó;0.1;25;3
-Feketerigó;0.1;30;5
-Rózsás pelikán;4.5;300;25
-Varjú;0.4;50;8
-Kakukk;0.1;30;6
-Énekes rigó;0.08;20;4
-Légykapó;0.07;18;3
-Rétisas;1.5;180;18
-Denevér;0.1;30;15
-Szajkó;0.25;40;7
-Vörös vércse;0.6;100;12
-Szürke gém;0.5;90;10
-Vízisikló;0.2;35;5
-Kis gyurgyalag;0.1;25;6
-Hamvas gébics;0.2;30;4
-Erdei fülemüle;0.05;15;7
-Nagy kócsag;1.2;120;15
-Vízityúk;0.3;45;8
-Feketególya;2.1;200;20
-Törpe harkály;0.1;20;6
-Gyöngybagoly;0.4;60;10
-Kék cinege;0.05;12;4
-Havasi fülemüle;0.1;18;5
-Kis fecskerigó;0.03;10;3
-Európai lúd;3.2;120;15
-Kis lile;0.2;35;7
-Tavirózsa;0.15;30;6
-Kerecsensólyom;0.8;130;18
-Fehér gólya;3.2;250;25
-Széncinege;0.04;12;4
-Kormorán;2.2;180;20
-Túzok;10.1;200;15
-Gólyapók;0.2;50;7
-Juharbagoly;0.3;40;8
-Rózsás flamingó;4.5;300;30
-Kerti cinege;0.03;12;6
-Kékvércse;0.5;90;10
-Ibolyás bütykös;0.1;30;8
-Fekete rigó;0.08;18;5
-Fenyőrigó;0.1;20;6
-Kis hattyú;4.1;150;20
-Kékcinke;0.04;13;4
-Ökörszem;0.06;15;3
-Vörösbegy;0.2;35;8
-Csaba hattyú;8.2;300;25
-Kék vércse;0.4;70;10
-Kis terápiás cinege;0.02;10;6
-Hamvas kékbegy;0.15;30;8
-Örvös galamb;0.3;45;5
-Sárgafejű rigó;0.1;18;3
-Tövisszúró gébics;0.2;40;7
-Aranysirály;0.5;70;15
-Kis fekete rigó;0.05;15;4
-Kékbegy;0.08;20;6
-Fekete rétihéja;0.6;90;12
-Füles bagoly;0.5;70;15
-Fekete hattyú;5.1;180;20
+Város neve;Városmag lakóinak száma (fő);Városmag területe (km²);Városmag népsűrűsége (fő/km²);Dávid értékelése (1-10)
+Tokyo;13515271;2191;6169;9.8
+Delhi;16753235;1484;11289;7.0
+Shanghai;24870895;6341;3922;6.6
+São Paulo;12252023;1521;8055;7.5
+Mexico City;9209944;1485;6202;8.9
+Cairo;10044894;3085;3256;3.7
+Mumbai;12478447;603;20694;9.2
+Beijing;21893095;16411;1334;4.8
+Dhaka;10295407;338;30460;8.7
+Osaka;2725006;225;12111;9.5
+New York-Newark;8804190;778;11316;3.0
+Karachi;20382881;3530;5774;2.9
+Buenos Aires;3054300;203;15046;8.1
+Chongqing;32054159;82403;389;1.1
+Istanbul;15519267;5196;2987;2.0
+Kolkata;4496694;206;21829;4.7
+Manila;1780148;43;41399;5.2
+Rio de Janeiro;6520000;1221;5340;2.7
+Tianjin;13866009;11920;1163;4.9
+Kinshasa;14565700;9965;1462;1.9
+Guangzhou;18676605;7434;2512;1.6
+Los Angeles;3990456;1214;3287;2.0
+Moscow;13200000;2511;5257;3.3
+Shenzhen;17494398;2050;8534;5.7
+Lahore;13004135;1772;7339;4.3
+Bangalore;8443675;709;11909;3.4
+Paris;2148271;105;20460;1.0
+Bogotá;7963000;1587;5018;8.5
+Jakarta;10154134;664;15292;6.9
+Chennai;6727000;426;15791;5.5
+Lima;8894000;2672;3329;5.5
+Bangkok;8305218;1569;5293;8.8
+Seoul;10013781;605;16552;3.4
+Nagoya;2320361;326;7118;2.6
+Hyderabad;6993262;650;10759;7.1
+London;8825001;1572;5614;6.6
+Tehran;9033003;751;12028;7.4
+Chicago;2746388;589;4663;2.5
+Chengdu;20937757;14378;1456;6.2
+Nanjing;9314685;6582;1415;5.5
+Wuhan;12447718;8494;1465;2.9
+Ho Chi Minh City;7431000;2061;3606;7.2
+Luanda;2165867;116;18671;6.0
+Ahmedabad;5570585;464;12006;3.4
+Kuala Lumpur;1768000;243;7276;5.3
+Xi'an;12183280;10135;1202;6.2
+Hong Kong;7298600;1104;6611;3.6
+Dongguan;10466625;2465;4246;4.6
+Hangzhou;11936010;16596;719;3.3
+Foshan;9498863;3848;2469;5.9
+Shenyang;8294000;12980;639;5.7
+Riyadh;6694000;1913;3499;6.0
+Baghdad;8126755;5200;1563;1.3
+Santiago;236453;22;10748;7.8
+Surat;4466826;327;13660;7.3
+Madrid;3266126;606;5390;2.3
+Suzhou;12748262;8488;1502;7.1
+Pune;3124458;276;11321;3.0
+Harbin;10635971;53068;200;9.9
+Houston;2325502;1553;1497;1.7
+Dallas;1345047;882;1525;9.3
+Toronto;2731571;630;4336;2.9
+Dar es Salaam;5383728;1393;3865;2.9
+Miami;470914;93;5069;5.1
+Belo Horizonte;2502557;331;7563;7.0
+Singapore;5638700;726;7770;4.9
+Philadelphia;1526006;370;4129;7.9
+Atlanta;498715;354;1408;7.6
+Fukuoka;1588924;343;4627;2.6
+Barcelona;1620343;101;15980;5.6
+Johannesburg;4803262;1643;2924;8.1
+Saint Petersburg;5601911;1400;4001;9.9
+Qingdao;10071722;11229;897;8.5
+Dalian;7450785;13742;542;1.6
+Washington;702455;177;3969;9.8
+Alexandria;5441866;2300;2366;8.2
+Jinan;9202432;10244;898;1.9
+Guadalajara;1385621;151;9176;8.8
